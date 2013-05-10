@@ -69,3 +69,52 @@ sys	0m0.004s
 [4]+  Done                    time curl http://localhost:9090
 snowbird:glowing-robot $ 
 
+===================================
+Multi-threaded Server
+
+snowbird:glowing-robot $ for i in `seq 1 4`; do time curl http://localhost:9090 & echo ; done
+[1] 2508
+
+[2] 2509
+
+[3] 2510
+
+[4] 2511
+
+snowbird:glowing-robot $ Number of digits 357507 
+real	0m12.129s
+user	0m0.005s
+sys	0m0.003s
+Number of digits 357507 Number of digits 357507 Number of digits 357507 
+real	0m16.169s
+user	0m0.006s
+sys	0m0.003s
+
+real	0m16.170s
+user	0m0.006s
+sys	0m0.004s
+
+real	0m16.170s
+user	0m0.006s
+sys	0m0.004s
+
+[1]   Done                    time curl http://localhost:9090
+[2]   Done                    time curl http://localhost:9090
+[3]-  Done                    time curl http://localhost:9090
+[4]+  Done                    time curl http://localhost:9090
+
+
+From server side
+1.0.0.127.in-addr.arpa - - [10/May/2013 01:04:31] "GET / HTTP/1.1" 200 -
+1.0.0.127.in-addr.arpa - - [10/May/2013 01:04:31] "GET / HTTP/1.1" 200 -
+Took 0:00:12.119766 seconds for req
+1.0.0.127.in-addr.arpa - - [10/May/2013 01:04:31] "GET / HTTP/1.1" 200 -
+Took 0:00:12.114678 seconds for req
+1.0.0.127.in-addr.arpa - - [10/May/2013 01:04:35] "GET / HTTP/1.1" 200 -
+Took 0:00:08.079765 seconds for req
+Took 0:00:04.040071 seconds for req
+
+Not any better! As expected - python is still restricted to one core/process - so threading does not help at all.
+
+=====================
+Lets try multiple processes!

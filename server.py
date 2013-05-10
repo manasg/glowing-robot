@@ -30,9 +30,14 @@ class ReqHandler(BaseHTTPRequestHandler):
 
         end = datetime.datetime.now()
         print "Took %s seconds for req" % str(end - start)
-    
+
+import SocketServer
+class ThreadingSimpleServer(SocketServer.ThreadingMixIn, HTTPServer):
+    pass
+
+
 def serve():
-    server = HTTPServer(('localhost',9090), ReqHandler)
+    server = ThreadingSimpleServer(('localhost',9090), ReqHandler)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
