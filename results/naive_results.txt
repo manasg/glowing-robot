@@ -1,0 +1,71 @@
+Hardware:
+Macbook Pro - Mid-2012 - 2.3 GHz i7 (Quad core), 8GB Ram, SSD
+
+-----
+Python Simple (Single thread/process) Server
+
+1. Single Request -
+snowbird:glowing-robot $ time curl http://localhost:9090
+Number of digits 357507 
+real	0m4.046s
+user	0m0.006s
+sys	0m0.003s
+
+2. 2 Requests in quick succession - 
+snowbird:glowing-robot $ time curl http://localhost:9090 & 
+[1] 2333
+snowbird:glowing-robot $ time curl http://localhost:9090 & 
+[2] 2335
+snowbird:glowing-robot $ Number of digits 357507 
+real	0m4.031s
+user	0m0.006s
+sys	0m0.003s
+Number of digits 357507 
+real	0m7.508s
+user	0m0.004s
+sys	0m0.003s
+
+[1]-  Done                    time curl http://localhost:9090
+[2]+  Done                    time curl http://localhost:9090
+----
+From the server's point of view - 
+snowbird:glowing-robot $ python server.py 
+1.0.0.127.in-addr.arpa - - [10/May/2013 00:44:52] "GET / HTTP/1.1" 200 -
+Took 0:00:04.021498 seconds for req
+1.0.0.127.in-addr.arpa - - [10/May/2013 00:44:56] "GET / HTTP/1.1" 200 -
+Took 0:00:04.011926 seconds for req
+
+
+3. 4 (almost) concurrent requests -
+snowbird:glowing-robot $ for i in `seq 1 4`; do time curl http://localhost:9090 & echo ; done
+[1] 2392
+
+[2] 2393
+
+[3] 2395
+
+[4] 2396
+
+snowbird:glowing-robot $ Number of digits 357507 
+real	0m4.027s
+user	0m0.005s
+sys	0m0.003s
+Number of digits 357507 
+real	0m8.028s
+user	0m0.006s
+sys	0m0.003s
+Number of digits 357507 
+real	0m12.032s
+user	0m0.005s
+sys	0m0.003s
+Number of digits 357507 
+real	0m16.045s
+user	0m0.007s
+sys	0m0.004s
+
+[1]   Done                    time curl http://localhost:9090
+[2]   Done                    time curl http://localhost:9090
+[3]-  Done                    time curl http://localhost:9090
+[4]+  Done                    time curl http://localhost:9090
+snowbird:glowing-robot $ 
+
